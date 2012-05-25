@@ -109,10 +109,13 @@ namespace NHibernate.JetDriver
             if (!_convertedDateParameters.Contains(p))
                 return;
 
-            //Someimes two pass conversion makes a parameter value
-            //of type DateTime to be of String Dbtype
-            DateTime date = DateTime.Parse(p.Value.ToString());
-            p.Value = GetNormalizedDateValue(date);
+            if (!string.IsNullOrEmpty((p.Value ?? String.Empty).ToString()))
+            {
+                //Someimes two pass conversion makes a parameter value
+                //of type DateTime to be of String Dbtype
+                DateTime date = DateTime.Parse(p.Value.ToString());
+                p.Value = GetNormalizedDateValue(date);
+            }
         }
 
         private void FixLongValue(IDataParameter p)
